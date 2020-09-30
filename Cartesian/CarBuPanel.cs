@@ -6,10 +6,13 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Drawing;
+using Newtonsoft.Json;
 namespace Cartesian
 {
     public partial class CarBuPanel : Panel
     {
+        #region 字段 
+
         //--------------------------字段------------------------------
         private PictureBox background = new PictureBox();
         private Label labPanSize = new Label();
@@ -20,7 +23,7 @@ namespace Cartesian
         private int[] originBox = new int[4] { 0, 0,0,0 };//原点,使用时采用.clone方法防止出现相同引用
         public int[] panelTempSize = new int[2];//panel大小临时容器,因为this.panel.size.width = XXX会报错,struct陷阱
         //private enum enumAct { Q,R,W,Z,Y,X };
-        private string actRuler = "NQRWZYX";//N代表已生成一个玻璃,可以当作最小
+        private string actRuler = "NRQWZYX";//N代表已生成一个玻璃,可以当作最小
         //private List<Int32[][]> btnsBox = new List<Int32[][]> { };//button矩形的坐标点集btnsBox
         public List<btnBox> btnsList = new List<btnBox> { };
         private static int btnId = 1;
@@ -76,9 +79,10 @@ namespace Cartesian
                         (int)Math.Ceiling((tembox[3] - tembox[1]) * n));
                     //location和size都向上取整防止产生空隙
             }
-            
-
         }
+        #endregion
+        #region 属性
+
         //---------------------------属性----------------------------
         //[Browsable(false)]
         private Color _btnsColor1 = SystemColors.Control; 
@@ -159,6 +163,8 @@ namespace Cartesian
             }
         }
 
+        #endregion
+        
         //--------------------------方法-----------------------------
         public CarBuPanel()
         {
@@ -171,9 +177,13 @@ namespace Cartesian
             InitializeComponent();
             //数据输入临时接口,后期可修改GetInstruction
             instrus = GetInstructions();
-            InstruToBtns(instrus[0]);
-
+            foreach (string item in instrus)
+            {
+                InstruToBtns(item);
+            }
             Console.ReadLine();
+
+            //string json = JsonConvert.SerializeObject(btnsList[10]);///!!!!!!!!!!!!!!什么问题
         }
 
         /// <summary>
@@ -197,7 +207,17 @@ namespace Cartesian
             if (instructions.Count == 0)
             {
                 Console.WriteLine("未接收到指令,使用TEST指令:\n[P2H2RBEA0R80E8xC8XBE3CY4240Z2562V2W2120N1CT7Z1568V2W2120N9Y2AD0Z2120W1568N9W1568N9Z2120W1568NBW1568NBZ2120W1568NBW1568NBZ2120W1568NBW1568NBZ2120W1568NBW1568NBZ175CW294AN1AY1374T3Z2120N3Z294AN14Z311AN20]\n" );
-                instructions.Add("[P2H2RBEA0R80E8xC8XBE3CY4240Z2562V2W2120N1CT7Z1568V2W2120N9Y2AD0Z2120W1568N9W1568N9Z2120W1568NBW1568NBZ2120W1568NBW1568NBZ2120W1568NBW1568NBZ2120W1568NBW1568NBZ175CW294AN1AY1374T3Z2120N3Z294AN14Z311AN20]");
+                instructions.Add(@"[P1H1RBEA0R80E8xC8XBE3CY294AT2Z311AN3CT3Z1374N14Z2120N28Y2562T3Z311AN40Z294AN32Y311AT3Z2562N40Z217AN37T2Z15C2N19]
+[P2H2RBEA0R80E8xC8XBE3CY4240Z2562V2W2120N1CT7Z1568V2W2120N9Y2AD0Z2120W1568N9W1568N9Z2120W1568NBW1568NBZ2120W1568NBW1568NBZ2120W1568NBW1568NBZ2120W1568NBW1568NBZ175CW294AN1AY1374T3Z2120N3Z294AN14Z311AN20]
+[P3H3RBEA0R80E8xC8XBE3CY2562T3Z311AN40Z294AN32Y311AT6Z1F86N33Y294AT8Z1374N14Z2120N28]
+[P4H4RBEA0R80E8xC8X2328Y56C2N4CY294AZ217AN27X222EY56C2N4BY294AZ2120N28X4A2EY56C2Z18BAN47Z18BAN4AZ18BAN4AY28F0T2Z24D6N29X2EB8Y3372T2Z175CN21V2Y2562T2Z175CN15]
+[P5H5RBEA0R80E8xC8XBE3CY2562T2Z311AN40Z294AN32T2Z175CN15Y311AT6Z1F86N33Y294AT8Z1374N14Z2120N28]
+[P6H6RBEA0R80E8xC8XBE3CY2120Z2562N1CT4Z1568NDZ217AN1DZ1F86N18Y2AD0T3Z2120V2W1568NDZ3066W294AN3EZ294AW294AN3AY2120Z1568NDZ294AN2ET4Z1F86N18Y1374Z2120N3T3Z311AN20]
+[P7H7RBEA0R80E8xC8XBE3CY1C84Z479AN48T2Z399EN38Y1C84Z399EN39Z2D32V2WD98N5Z51E0V2WDCAT2Q28F0N1Y2120Z2562W2120N1CZ2562W2120N1CZ2562W2120N1CZ2562W2120N24T2Z1374N3Y2562T3Z2120N24Z311AN40Z294AN32]
+[P8H8RBEA0R80E8xC8XBE3CY7E18T3Z294AV4W1F86N23Z1F86V3W294AN23Z2120V4W1F86N18]
+[P9H9RBEA0R80E8xC8XBE3CY294AZ3372N43Z4614W2562T3Q175CN15T2Z1F86N23Y175CT6Z1F86NAY3F0CZ175CV2W1F86NAT4Z294AV2W1F86N23]
+[PAHARBEA0R80E8xC8X7BDEV3Y294AT3Z294AN3AX294AY2058N2DV3Y1F86N23X175CV3Y1F86N13Y217AN16]");
+                //instructions.Add("[P2H2RBEA0R80E8xC8XBE3CY4240Z2562V2W2120N1CT7Z1568V2W2120N9Y2AD0Z2120W1568N9W1568N9Z2120W1568NBW1568NBZ2120W1568NBW1568NBZ2120W1568NBW1568NBZ2120W1568NBW1568NBZ175CW294AN1AY1374T3Z2120N3Z294AN14Z311AN20]");
             }
 
             foreach (string n in instructions)//循环输出转换数据
@@ -243,13 +263,20 @@ namespace Cartesian
         private void InstruToBtns(string instruction)
         {
             //初始化字典
-            LastSpecificBox.Add('X', (int[])originBox.Clone());
-            LastSpecificBox.Add('Y', (int[])originBox.Clone());
-            LastSpecificBox.Add('Z', (int[])originBox.Clone());
-            LastSpecificBox.Add('W', (int[])originBox.Clone());
-            LastSpecificBox.Add('Q', (int[])originBox.Clone());
-            LastSpecificBox.Add('R', (int[])originBox.Clone());
+            LastSpecificBox['X'] = (int[])originBox.Clone();
+            LastSpecificBox['Y'] = (int[])originBox.Clone();
+            LastSpecificBox['Z'] = (int[])originBox.Clone();
+            LastSpecificBox['W'] = (int[])originBox.Clone();
+            LastSpecificBox['Q'] = (int[])originBox.Clone();
+            LastSpecificBox['R'] = (int[])originBox.Clone();
             
+            //LastSpecificBox.Add('X', (int[])originBox.Clone());
+            //LastSpecificBox.Add('Y', (int[])originBox.Clone());
+            //LastSpecificBox.Add('Z', (int[])originBox.Clone());
+            //LastSpecificBox.Add('W', (int[])originBox.Clone());
+            //LastSpecificBox.Add('Q', (int[])originBox.Clone());
+            //LastSpecificBox.Add('R', (int[])originBox.Clone());利于多次重复操作时不会出现已存在变量
+
             //将指令中R代表的原片最大XY改为jk表示
             var instruBuilder = new StringBuilder(instruction);
             instruBuilder[instruction.IndexOf('R')] = 'j';//Xmax
@@ -275,7 +302,7 @@ namespace Cartesian
 ===========================================================");//lastbox坐标显示
             }
         }
-
+        #region 实行细节
         /// <summary>
         /// 进行具体切割操作
         /// </summary>
@@ -389,6 +416,7 @@ namespace Cartesian
             int idxVT = instruction.IndexOfAny(new char[] { 'V', 'T', 'M' });
             int idxAction = instruction.IndexOfAny(new char[] { 'X', 'Y', 'Z', 'W', 'R', 'Q' }, idxVT);
             int idxNextAct = instruction.IndexOfAny(new char[] {'X','Y','Z','W','R','Q'}, idxAction+1);
+
             if (idxNextAct == -1 || actRuler.IndexOf(instruction[idxAction]) <= actRuler.IndexOf(instruction[idxNextAct]))//如果后面没有方法了或者后一个方法大于等于前一个方法
             {
                 idxNextAct = idxAction;
@@ -399,7 +427,7 @@ namespace Cartesian
                 {
                     var a = idxNextAct;
                     idxNextAct = instruction.IndexOfAny(new char[] { 'X', 'Y', 'Z', 'W', 'R', 'Q' }, idxNextAct + 1);
-                    if (actRuler.IndexOf(instruction[idxAction]) <= actRuler.IndexOf(instruction[idxNextAct]))
+                    if (idxNextAct == -1 || actRuler.IndexOf(instruction[idxAction]) <= actRuler.IndexOf(instruction[idxNextAct]))
                     {//预测已经循环到底了,则复原idxNextAct并跳出循环
                         idxNextAct = a;
                         break;
@@ -420,6 +448,8 @@ namespace Cartesian
             instruction = instruction.Insert(idxVT, copy);
             return instruction;
         }
+
+        #endregion
         public void DrawBtnsPanel(int[] panelTempSize)
         {
             this.background.BackColor = System.Drawing.SystemColors.MenuHighlight;
@@ -475,8 +505,8 @@ namespace Cartesian
                 item.Shift(n, tempTempsize[1], tempTempsize[0], background.Location.X, background.Location.Y, this.BtnsRotate,this.BtnsFlip);
                 item.Margin = new System.Windows.Forms.Padding(0);
                 item.BackColor = this.BtnsColor1;
-                //item.Text = ""+item.id +"/D" +(item.detail == null ? "" : (":" + item.detail));//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                item.Text = item.detail;
+                item.Text = ""+item.id +"/D" +(item.detail == null ? "" : (":" + item.detail));//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //item.Text = item.detail;
                 this.Controls.Add(item);
                 Font stringFont = new Font("Arial", 16);
                 //Graphics a = item.CreateGraphics();
@@ -485,7 +515,7 @@ namespace Cartesian
                 float fontsize = 5F * panelTempSize[0] / 200;
                 //var fontsize = 5F * panelTempSize[0]*panelTempSize[0]/
                 item.Font = new System.Drawing.Font("宋体", fontsize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(134)));
-                Console.WriteLine("panelx = {0} and fontsize = {1} and buttonsizex = {2}" + " and this.panelx = " + this.panelTempSize[0], panelTempSize[0], fontsize, item.Size.Width);
+                //Console.WriteLine("panelx = {0} and fontsize = {1} and buttonsizex = {2}" + " and this.panelx = " + this.panelTempSize[0], panelTempSize[0], fontsize, item.Size.Width);
                 //Console.WriteLine("id="+item.id+";btnX=" + item.Size.Width + ";btnY=" + item.Size.Height + ";locX=" + item.Location.X + ";locY" + item.Location.Y + ";");
             }
             this.Controls.Add(this.background);

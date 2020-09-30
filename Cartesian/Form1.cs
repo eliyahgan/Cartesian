@@ -19,11 +19,11 @@ namespace Cartesian
         private void Form1_Load(object sender, EventArgs e)
         {
             this.carBuPanel1.DrawBtnsPanel((int[])this.carBuPanel1.panelTempSize.Clone());
-            //Graphics test
-            Image newImage = Image.FromFile("D:/windowsPjt/Cartesian/Cartesian/SampImag.jpg");
-            PointF ulCorner = new PointF(100.0F, 100.0F);
-            Graphics a = this.button2.CreateGraphics();
-            a.DrawImage(newImage, ulCorner);
+            ////Graphics test
+            //Image newImage = Image.FromFile("D:/windowsPjt/Cartesian/Cartesian/SampImag.jpg");
+            //PointF ulCorner = new PointF(100.0F, 100.0F);
+            //Graphics a = this.button2.CreateGraphics();
+            //a.DrawImage(newImage, ulCorner);
 
         }
         private void button1_Click_1(object sender, EventArgs e)
