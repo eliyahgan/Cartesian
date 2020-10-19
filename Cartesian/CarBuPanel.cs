@@ -20,7 +20,7 @@ namespace Cartesian
         private int[] originBox = new int[4] { 0, 0,0,0 };//原点,使用时采用.clone方法防止出现相同引用
         public int[] panelTempSize = new int[2];//panel大小临时容器,因为this.panel.size.width = XXX会报错,struct陷阱
         //private enum enumAct { Q,R,W,Z,Y,X };
-        private string actRuler = "NQRWZYX";//N代表已生成一个玻璃,可以当作最小
+        private string actRuler = "NRQWZYX";//N代表已生成一个玻璃,可以当作最小
         //private List<Int32[][]> btnsBox = new List<Int32[][]> { };//button矩形的坐标点集btnsBox
         public List<btnBox> btnsList = new List<btnBox> { };
         private static int btnId = 1;
@@ -399,7 +399,7 @@ namespace Cartesian
                 {
                     var a = idxNextAct;
                     idxNextAct = instruction.IndexOfAny(new char[] { 'X', 'Y', 'Z', 'W', 'R', 'Q' }, idxNextAct + 1);
-                    if (actRuler.IndexOf(instruction[idxAction]) <= actRuler.IndexOf(instruction[idxNextAct]))
+                    if (idxNextAct == -1 || actRuler.IndexOf(instruction[idxAction]) <= actRuler.IndexOf(instruction[idxNextAct]))
                     {//预测已经循环到底了,则复原idxNextAct并跳出循环
                         idxNextAct = a;
                         break;
