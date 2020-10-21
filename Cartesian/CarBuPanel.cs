@@ -33,11 +33,13 @@ namespace Cartesian
             public Int32[] tembox;
             public string detail;//N的值
             public int id = btnId++;
+            public int sizex;
+            public int sizey;
             public btnBox(Int32[] box)
             {
                 this.box = box;
-                var sizex = box[2]-box[0];
-                var sizey = box[3]-box[1];
+                sizex = box[2]-box[0];
+                sizey = box[3]-box[1];
                 detail = sizex + "*" + sizey;
             }
             public void Shift(float n, int ymax,int xmax, int BGx, int BGy,RotateDegree btnsrotate,bool btnsflip)
@@ -171,7 +173,7 @@ namespace Cartesian
             InitializeComponent();
         }
 
-        public CarBuPanel(IContainer container)
+        public CarBuPanel(IContainer container)//-------------------------程序入口--------------------------
         {
             container.Add(this);
             InitializeComponent();
@@ -181,9 +183,13 @@ namespace Cartesian
             {
                 InstruToBtns(item);
             }
-            Console.ReadLine();
 
-            //string json = JsonConvert.SerializeObject(btnsList[10]);///!!!!!!!!!!!!!!什么问题
+            Console.WriteLine(btnsList.Count);
+            for (int i = 0; i < btnsList.Count; i++)
+            {
+                Console.WriteLine(btnsList[i].sizex+","+ btnsList[i].sizey+","+i+",");
+            }
+            Console.ReadLine();
         }
 
         /// <summary>
@@ -486,9 +492,7 @@ namespace Cartesian
                 this.labPanSize.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
                 this.labPanSize.Margin = new System.Windows.Forms.Padding(0);
             }
-            //if (BtnsFlip)
-            //{
-                
+             
             //}//依据翻转改变渲染btn的顺序
             //switch ((Int32)BtnsRotate)
             //{
